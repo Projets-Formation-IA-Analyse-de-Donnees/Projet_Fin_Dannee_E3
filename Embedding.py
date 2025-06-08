@@ -4,7 +4,9 @@ from dotenv import load_dotenv
 from arango import ArangoClient
 from sentence_transformers import SentenceTransformer
 from tqdm import tqdm
+from transformers.utils import logging as hf_logging
 
+hf_logging.set_verbosity_error()
 
 load_dotenv()
 
@@ -33,14 +35,14 @@ def connect_arango_db():
             username=os.getenv("ARANGO_USER"),
             password=os.getenv("ARANGO_PASSWORD")
         )
-        logger.info("Connexion établie.")
+        logger.info("Connexion etablie.")
     except Exception as e:
-        logger.warning(f"Erreur de connexion à ArangoDB:{e}")
+        logger.warning(f"Erreur de connexion a ArangoDB:{e}")
 
     return db
 
 def generer_embeddings(db):
-    """Génère et insère les embeddings pour les articles avec contenu."""
+    """Genere et insere les embeddings pour les articles avec contenu."""
     articles = db.collection("articles")
     embeddings = db.collection("embeddings")
 
@@ -55,7 +57,7 @@ def generer_embeddings(db):
             embeddings.insert({"_key": _key, "embedding": vecteur})
             count += 1
 
-    logger.info(f"{count} nouveaux embeddings insérés dans ArangoDB.")
+    logger.info(f"{count} nouveaux embeddings inseres dans ArangoDB.")
 
 def verifier_articles_sans_embeddings(db):
     """Affiche les articles avec contenu mais sans embedding."""
