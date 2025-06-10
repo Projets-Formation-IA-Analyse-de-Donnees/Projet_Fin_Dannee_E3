@@ -6,3 +6,5 @@ requests
 tqdm
 sentence-transformers
 hf_xet
+flask
+numpy
