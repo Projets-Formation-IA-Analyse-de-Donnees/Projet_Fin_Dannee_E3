@@ -1,5 +1,18 @@
 version: "3.8"
+
 services:
+  qdrant:
+    image: qdrant/qdrant
+    container_name: qdrant
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant_storage:/qdrant/storage
+    restart: unless-stopped
+    networks:
+      - backend_net
+
   flask_model:
     build:
       context: .
@@ -9,10 +22,13 @@ services:
     env_file:
       - .env
     networks:
-    - backend_net
-   
+      - backend_net
+    depends_on:
+      - qdrant
+
 networks:
   backend_net:
-    external: true
+    external: true  
 
-
+volumes:
+  qdrant_storage:
