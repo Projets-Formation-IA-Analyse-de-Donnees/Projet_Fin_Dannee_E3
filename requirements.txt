@@ -1,1 +1,7 @@
-Flask==2.3.2
+flask==2.3.2
+qdrant-client==1.6.3
+pyArango==2.0.1
+sentence-transformers>=2.2.2
+numpy<2
+hdbscan
+
