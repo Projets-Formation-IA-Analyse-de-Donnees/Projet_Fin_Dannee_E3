@@ -21,7 +21,7 @@ jobs:
           echo "API_KEY_ETL=${{ secrets.API_KEY_ETL }}" >> .env
           echo "API_KEY=${{ secrets.API_KEY }}" >> .env
 
-      - name: Remove 'external: true' from docker-compose.yml
+      - name: Remove 'external true' from docker-compose.yml
         run: |
 
           grep -v 'external: true' docker-compose.yml > docker-compose.tmp && mv docker-compose.tmp docker-compose.yml
