@@ -21,18 +21,21 @@ jobs:
           echo "API_KEY_ETL=${{ secrets.API_KEY_ETL }}" >> .env
           echo "API_KEY=${{ secrets.API_KEY }}" >> .env
 
-      - name: Remove 'external true' from docker-compose.yml
-        run: |
+      - name: Remove 'external: true' from docker-compose.yml
+        run: grep -v 'external: true' docker-compose.yml > docker-compose.tmp && mv docker-compose.tmp docker-compose.yml
 
-          grep -v 'external: true' docker-compose.yml > docker-compose.tmp && mv docker-compose.tmp docker-compose.yml
-
-      - name: Display modified docker-compose.yml
+      - name: Display critical files for debugging
         run: |
           echo "--- Content of docker-compose.yml after modification: ---"
           cat docker-compose.yml
+          echo "---"
+          echo "--- Content of app/routes/search.py: ---"
+          cat app/routes/search.py
       
-      - name: Build and start containers
-        run: docker compose up -d --build --no-cache
+      - name: Build and start containers (no cache)
+        run: |
+          docker compose build --no-cache
+          docker compose up -d
 
       - name: Wait for services to be ready
         run: sleep 15
