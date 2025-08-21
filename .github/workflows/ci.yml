@@ -1,0 +1,40 @@
+name: CI Pipeline - Tests API Model
+
+
+on:
+ 
+  push:
+    branches: [ "main", "master" ]
+ 
+  pull_request:
+    branches: [ "main", "master" ]
+
+
+jobs:
+  
+  build-and-test:
+  
+    runs-on: ubuntu-latest
+
+  
+    steps:
+     
+      - name: Checkout du code
+        uses: actions/checkout@v4
+
+ 
+      - name: Construire et démarrer les conteneurs
+        run: docker-compose up -d --build
+
+     
+      - name: Attendre que les services soient prêts
+        run: sleep 15
+
+     
+      - name: Lancer les tests avec pytest
+        run: docker-compose exec flask_model pytest --cov=app
+
+    
+      - name: Arrêter les conteneurs
+        if: always()
+        run: docker-compose down
