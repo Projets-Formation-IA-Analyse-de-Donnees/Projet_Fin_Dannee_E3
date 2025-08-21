@@ -21,6 +21,14 @@ jobs:
      
       - name: Checkout du code
         uses: actions/checkout@v4
+    
+      - name: Create .env file
+        run: |
+          echo "QDRANT_HOST=${{ secrets.QDRANT_HOST }}" >> .env
+          echo "QDRANT_PORT=${{ secrets.QDRANT_PORT }}" >> .env
+          echo "URL_ARTICLE=${{ secrets.URL_ARTICLE }}" >> .env
+          echo "API_KEY_ETL=${{ secrets.API_KEY_ETL }}" >> .env
+          echo "API_KEY=${{ secrets.API_KEY }}" >> .env
 
  
       - name: Construire et démarrer les conteneurs
@@ -37,4 +45,4 @@ jobs:
     
       - name: Arrêter les conteneurs
         if: always()
-        run: docker-compose down
+        run: docker compose down
