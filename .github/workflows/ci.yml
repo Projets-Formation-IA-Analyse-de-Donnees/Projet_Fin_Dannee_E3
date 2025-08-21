@@ -32,7 +32,7 @@ jobs:
           cat docker-compose.yml
       
       - name: Build and start containers
-        run: docker compose up -d --build
+        run: docker compose up -d --build --no-cache
 
       - name: Wait for services to be ready
         run: sleep 15
