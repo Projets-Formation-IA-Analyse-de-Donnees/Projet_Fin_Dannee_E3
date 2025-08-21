@@ -20,24 +20,31 @@ jobs:
           echo "URL_ARTICLE=${{ secrets.URL_ARTICLE }}" >> .env
           echo "API_KEY_ETL=${{ secrets.API_KEY_ETL }}" >> .env
           echo "API_KEY=${{ secrets.API_KEY }}" >> .env
-      - name: Debug file content
-        run: |
-          echo "--- Listing files in the current directory: ---"
-          ls -la
-          echo "--- Content of docker-compose.ci.yml: ---"
-          cat docker-compose.ci.yml
-      
-      - name: Construire et démarrer les conteneurs
-        run: docker compose -f docker-compose.yml -f docker-compose.ci.yml up -d --build
 
-      - name: Attendre que les services soient prêts
+      # NOUVELLE APPROCHE ROBUSTE avec 'grep'
+      - name: Remove 'external: true' from docker-compose.yml
+        # Explication :
+        # 1. `grep -v 'external: true' docker-compose.yml` : Sélectionne toutes les lignes SAUF celle contenant 'external: true'.
+        # 2. `> docker-compose.tmp` : Écrit le résultat dans un fichier temporaire.
+        # 3. `&& mv docker-compose.tmp docker-compose.yml` : Si la première commande réussit, remplace l'original par le temporaire.
+        run: grep -v 'external: true' docker-compose.yml > docker-compose.tmp && mv docker-compose.tmp docker-compose.yml
+
+      # Étape de débogage pour vérifier la modification
+      - name: Display modified docker-compose.yml
+        run: |
+          echo "--- Content of docker-compose.yml after modification: ---"
+          cat docker-compose.yml
+      
+      # Les commandes suivantes restent inchangées
+      - name: Build and start containers
+        run: docker compose up -d --build
+
+      - name: Wait for services to be ready
         run: sleep 15
 
-   
       - name: Lancer les tests avec pytest
-        run: docker compose -f docker-compose.yml -f docker-compose.ci.yml exec flask_model pytest --cov=app
+        run: docker compose exec flask_model pytest --cov=app
 
-      
-      - name: Arrêter les conteneurs
+      - name: Stop containers
         if: always()
-        run: docker compose -f docker-compose.yml -f docker-compose.ci.yml down
+        run: docker compose down
