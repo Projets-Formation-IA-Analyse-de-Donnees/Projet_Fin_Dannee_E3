@@ -20,7 +20,12 @@ jobs:
           echo "URL_ARTICLE=${{ secrets.URL_ARTICLE }}" >> .env
           echo "API_KEY_ETL=${{ secrets.API_KEY_ETL }}" >> .env
           echo "API_KEY=${{ secrets.API_KEY }}" >> .env
-          
+      - name: Debug file content
+        run: |
+          echo "--- Listing files in the current directory: ---"
+          ls -la
+          echo "--- Content of docker-compose.ci.yml: ---"
+          cat docker-compose.ci.yml
       
       - name: Construire et démarrer les conteneurs
         run: docker compose -f docker-compose.yml -f docker-compose.ci.yml up -d --build
