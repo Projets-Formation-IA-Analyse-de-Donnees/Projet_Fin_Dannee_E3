@@ -51,7 +51,7 @@ def semantic_search():
         print("Recherche des points similaires dans Qdrant...")
         search_result = client.query_points(
             collection_name=COLLECTION_NAME,
-            query_vector=query_vector,
+            query=query_vector,
             query_filter=search_filter, 
             limit=limit,
             with_payload=True
