@@ -21,21 +21,16 @@ jobs:
           echo "API_KEY_ETL=${{ secrets.API_KEY_ETL }}" >> .env
           echo "API_KEY=${{ secrets.API_KEY }}" >> .env
 
-      # NOUVELLE APPROCHE ROBUSTE avec 'grep'
       - name: Remove 'external: true' from docker-compose.yml
-        # Explication :
-        # 1. `grep -v 'external: true' docker-compose.yml` : Sélectionne toutes les lignes SAUF celle contenant 'external: true'.
-        # 2. `> docker-compose.tmp` : Écrit le résultat dans un fichier temporaire.
-        # 3. `&& mv docker-compose.tmp docker-compose.yml` : Si la première commande réussit, remplace l'original par le temporaire.
-        run: grep -v 'external: true' docker-compose.yml > docker-compose.tmp && mv docker-compose.tmp docker-compose.yml
+        run: |
 
-      # Étape de débogage pour vérifier la modification
+          grep -v 'external: true' docker-compose.yml > docker-compose.tmp && mv docker-compose.tmp docker-compose.yml
+
       - name: Display modified docker-compose.yml
         run: |
           echo "--- Content of docker-compose.yml after modification: ---"
           cat docker-compose.yml
       
-      # Les commandes suivantes restent inchangées
       - name: Build and start containers
         run: docker compose up -d --build
 
