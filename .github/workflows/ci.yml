@@ -1,4 +1,4 @@
-name: CI Pipeline - Tests de l'API IA
+name: CI Pipeline
 
 on:
   push:
@@ -7,42 +7,41 @@ on:
     branches: [ "main", "master" ]
 
 jobs:
-  build-and-test:
+  test:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout du code
+      - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Create .env file
+      - name: Setup Environment and Debug Files
         run: |
-          echo "QDRANT_HOST=${{ secrets.QDRANT_HOST }}" >> .env
-          echo "QDRANT_PORT=${{ secrets.QDRANT_PORT }}" >> .env
+          echo "--- Setting up .env file ---"
+          echo "QDRANT_HOST=qdrant" >> .env
+          echo "QDRANT_PORT=6333" >> .env
           echo "URL_ARTICLE=${{ secrets.URL_ARTICLE }}" >> .env
           echo "API_KEY_ETL=${{ secrets.API_KEY_ETL }}" >> .env
           echo "API_KEY=${{ secrets.API_KEY }}" >> .env
-
-      - name: Remove 'external: true' from docker-compose.yml
-        run: grep -v 'external: true' docker-compose.yml > docker-compose.tmp && mv docker-compose.tmp docker-compose.yml
-
-      - name: Display critical files for debugging
-        run: |
-          echo "--- Content of docker-compose.yml after modification: ---"
+          
+          echo "--- Modifying docker-compose.yml for CI ---"
+          grep -v 'external: true' docker-compose.yml > docker-compose.tmp && mv docker-compose.tmp docker-compose.yml
+          
+          echo "--- Displaying modified docker-compose.yml ---"
           cat docker-compose.yml
-          echo "---"
-          echo "--- Content of app/routes/search.py: ---"
+          
+          echo "--- Displaying app/routes/search.py ---"
           cat app/routes/search.py
-      
-      - name: Build and start containers (no cache)
+
+      - name: Build and Start Services
         run: |
           docker compose build --no-cache
           docker compose up -d
 
-      - name: Wait for services to be ready
-        run: sleep 15
+      - name: Wait for Services
+        run: sleep 20
 
-      - name: Lancer les tests avec pytest
+      - name: Run Pytest
         run: docker compose exec flask_model pytest --cov=app
 
-      - name: Stop containers
+      - name: Stop Services
         if: always()
         run: docker compose down
