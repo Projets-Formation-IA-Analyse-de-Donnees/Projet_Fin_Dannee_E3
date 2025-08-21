@@ -24,7 +24,7 @@ jobs:
 
  
       - name: Construire et démarrer les conteneurs
-        run: docker-compose up -d --build
+        run: docker compose up -d --build
 
      
       - name: Attendre que les services soient prêts
@@ -32,7 +32,7 @@ jobs:
 
      
       - name: Lancer les tests avec pytest
-        run: docker-compose exec flask_model pytest --cov=app
+        run: docker compose exec flask_model pytest --cov=app
 
     
       - name: Arrêter les conteneurs
