@@ -1,7 +1,7 @@
 flask==2.3.2
-qdrant-client==1.6.3
+qdrant-client>=1.7.0
 pyArango==2.0.1
 sentence-transformers>=2.2.2
 numpy<2
 hdbscan
-
+umap-learn
