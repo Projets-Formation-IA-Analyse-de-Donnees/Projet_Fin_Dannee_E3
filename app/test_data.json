@@ -1,0 +1,14 @@
+[
+  {
+    "_key": "test_key_1",
+    "num": "Art. TEST 1",
+    "content": "Contenu du premier article de test.",
+    "code_parent": "CODE_TEST_PARENT"
+  },
+  {
+    "_key": "test_key_2",
+    "num": "Art. TEST 2",
+    "content": "Contenu du deuxième article.",
+    "code_parent": "CODE_TEST_PARENT"
+  }
+]
