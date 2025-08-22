@@ -38,7 +38,7 @@ jobs:
         run: sleep 20
 
       - name: Initialize Database with Mocked Data
-        run: docker compose exec flask_model python -c "import startup, json, logging; from unittest.mock import patch; logging.basicConfig(level=logging.INFO); with patch('startup.get_all_articles_from_api', new=lambda: json.load(open('app/test_data.json'))) as mock: startup.initialize_vector_index()"
+        run: 'docker compose exec flask_model python -c "import startup, json, logging; from unittest.mock import patch; logging.basicConfig(level=logging.INFO); with patch(''startup.get_all_articles_from_api'', new=lambda: json.load(open(''app/test_data.json''))) as mock: startup.initialize_vector_index()"'
 
       - name: Run Pytest
         run: docker compose exec flask_model pytest --cov=app
