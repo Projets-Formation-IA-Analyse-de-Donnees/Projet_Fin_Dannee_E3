@@ -40,12 +40,12 @@ jobs:
       - name: Initialize Database with Mocked Data
         run: |
           docker compose exec -e PYTHONPATH=. flask_model python - <<EOF
-          import startup, json, logging
+          import app.startup, json, logging
           from unittest.mock import patch
           logging.basicConfig(level=logging.INFO)
           print("--- Initializing DB with MOCKED data ---")
-          with patch('startup.get_all_articles_from_api', new=lambda: json.load(open('app/test_data.json'))):
-              startup.initialize_vector_index()
+          with patch('app.startup.get_all_articles_from_api', new=lambda: json.load(open('app/test_data.json'))):
+              app.startup.initialize_vector_index()
           print("--- DB Initialization Complete ---")
           EOF
       - name: Run Pytest
