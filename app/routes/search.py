@@ -58,7 +58,7 @@ def semantic_search():
         )
         
         results = []
-        for hit in search_result:
+        for hit in search_result[0]:
             payload = hit.payload or {}
             results.append({
               
