@@ -4,7 +4,7 @@ on:
   push:
     branches: [ "main" ]
   pull_request:
-    branches: [ "main"]
+    branches: [ "main" ]
 
 jobs:
   test:
@@ -13,7 +13,7 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Setup Environment and Debug Files
+      - name: Setup Environment
         run: |
           echo "QDRANT_HOST=qdrant" >> .env
           echo "QDRANT_PORT=6333" >> .env
@@ -21,13 +21,6 @@ jobs:
           echo "API_KEY_ETL=dummy-key" >> .env
           echo "API_KEY=super-secret-test-key" >> .env
           grep -v 'external: true' docker-compose.yml > docker-compose.tmp && mv docker-compose.tmp docker-compose.yml
-
-      - name: Display Debug Information
-        run: |
-          echo "--- Displaying modified docker-compose.yml ---"
-          cat docker-compose.yml
-          echo "--- Displaying app/routes/search.py ---"
-          cat app/routes/search.py
 
       - name: Build and Start Services
         run: |
@@ -38,16 +31,8 @@ jobs:
         run: sleep 20
 
       - name: Initialize Database with Mocked Data
-        run: |
-          docker compose exec -e PYTHONPATH=. flask_model python - <<EOF
-          import app.startup, json, logging
-          from unittest.mock import patch
-          logging.basicConfig(level=logging.INFO)
-          print("--- Initializing DB with MOCKED data ---")
-          with patch('app.startup.get_all_articles_from_api', new=lambda: json.load(open('app/test_data.json'))):
-              app.startup.initialize_vector_index()
-          print("--- DB Initialization Complete ---")
-          EOF
+        run: docker compose exec flask_model python run_ci_startup.py
+
       - name: Run Pytest
         run: docker compose exec flask_model pytest --cov=app
 
