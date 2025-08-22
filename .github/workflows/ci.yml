@@ -39,7 +39,7 @@ jobs:
 
       - name: Initialize Database with Mocked Data
         run: |
-          docker compose exec flask_model python - <<EOF
+          docker compose exec -e PYTHONPATH=. flask_model python - <<EOF
           import startup, json, logging
           from unittest.mock import patch
           logging.basicConfig(level=logging.INFO)
