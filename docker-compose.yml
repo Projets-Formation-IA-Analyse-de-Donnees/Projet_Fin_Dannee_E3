@@ -18,10 +18,12 @@ services:
     container_name: flask_model
     ports:
       - "5001:5001"
+      - "5005:5005"
     env_file:
       - .env
     volumes:
       - model_cache:/root/.cache
+      - ./mlruns:/code/mlrun
     networks:
       - backend_net
     depends_on:

@@ -1,6 +1,7 @@
 import os
 from flask import Blueprint, jsonify,request
 from qdrant_client import QdrantClient, models
+from app.auth import require_api_key
 from collections import Counter
 import itertools
 import traceback
@@ -14,6 +15,7 @@ COLLECTION_NAME = "articles_chunked"
 client = QdrantClient(host=QDRANT_HOST, port=QDRANT_PORT)
 
 @clusters_bp.route('/clusters_for_articles', methods=['POST'])
+@require_api_key()
 def get_clusters_for_articles():
     """
     Reçoit une liste d'ID d'articles et renvoie leur cluster dominant.
