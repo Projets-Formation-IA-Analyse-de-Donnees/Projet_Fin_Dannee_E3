@@ -132,4 +132,4 @@ def test_clusters_endpoint_article_with_no_cluster_id(test_client, mocker):
     
     assert response.status_code == 200
     response_data = response.get_json()
-    assert response_data == {'article_sans_cluster': -1}
+    assert response_data == {'article_sans_cluster': None}
