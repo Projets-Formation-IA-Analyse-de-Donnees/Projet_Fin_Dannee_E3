@@ -6,7 +6,12 @@ import logging
 from qdrant_client import QdrantClient, models
 
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.INFO,
+                    format='%(asctime)s - %(levelname)s - %(message)s',
+                    handlers=[
+                        logging.FileHandler("Clustering.log", mode='w'), # 'w' pour écraser le log à chaque lancement
+                        logging.StreamHandler()
+                    ])
 
 
 QDRANT_HOST = os.getenv("QDRANT_HOST")

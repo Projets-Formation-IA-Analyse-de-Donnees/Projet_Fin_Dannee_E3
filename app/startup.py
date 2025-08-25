@@ -5,8 +5,12 @@ from qdrant_client import QdrantClient, models
 from app.embeddings import get_embeddings_batch, load_model
 import logging 
 
-
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.INFO,
+                    format='%(asctime)s - %(levelname)s - %(message)s',
+                    handlers=[
+                        logging.FileHandler("Startup.log", mode='w'), # 'w' pour écraser le log à chaque lancement
+                        logging.StreamHandler()
+                    ])
 
 
 QDRANT_HOST = os.getenv("QDRANT_HOST")

@@ -3,6 +3,14 @@ from flask import Blueprint, request, jsonify
 from qdrant_client import QdrantClient,models
 from app.embeddings import get_embedding 
 from app.auth import require_api_key
+import logging
+
+logging.basicConfig(level=logging.INFO,
+                    format='%(asctime)s - %(levelname)s - %(message)s',
+                    handlers=[
+                        logging.FileHandler("Endpoint_Search.log", mode='w'), # 'w' pour écraser le log à chaque lancement
+                        logging.StreamHandler()
+                    ])
 
 
 search_bp = Blueprint('search_bp', __name__)
@@ -33,12 +41,12 @@ def semantic_search():
     code_id = data.get('code_id')
 
     try:
-        print(f"Vectorisation de la requête : '{user_query}'")
+        logging.info(f"Vectorisation de la requête : '{user_query}'")
         query_vector = get_embedding(user_query, is_query=True)
 
         search_filter = None
         if code_id:
-            print(f"Application d'un filtre pour le code_id : {code_id}")
+            logging.info(f"Application d'un filtre pour le code_id : {code_id}")
             search_filter = models.Filter(
                 must=[
                     models.FieldCondition(
@@ -48,7 +56,7 @@ def semantic_search():
                 ]
             )
 
-        print("Recherche des points similaires dans Qdrant...")
+        logging.info("Recherche des points similaires dans Qdrant...")
         search_result = client.query_points(
             collection_name=COLLECTION_NAME,
             query=query_vector,
@@ -69,9 +77,9 @@ def semantic_search():
                 "highlight": payload.get("chunk_text") 
             })
         
-        print(f"Recherche terminée. {len(results)} résultats trouvés.")
+        logging.info(f"Recherche terminée. {len(results)} résultats trouvés.")
         return jsonify(results), 200
 
     except Exception as e:
-        print(f"Erreur lors de la recherche sémantique : {e}")
+        logging.error(f"Erreur lors de la recherche sémantique : {e}")
         return jsonify({"error": "Une erreur interne est survenue"}), 500

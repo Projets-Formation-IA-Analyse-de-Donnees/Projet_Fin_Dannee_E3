@@ -5,6 +5,14 @@ from app.auth import require_api_key
 from collections import Counter
 import itertools
 import traceback
+import logging
+
+logging.basicConfig(level=logging.INFO,
+                    format='%(asctime)s - %(levelname)s - %(message)s',
+                    handlers=[
+                        logging.FileHandler("Endpoint_Cluster.log", mode='w'), # 'w' pour écraser le log à chaque lancement
+                        logging.StreamHandler()
+                    ])
 
 
 clusters_bp = Blueprint('clusters_bp', __name__)
@@ -25,9 +33,10 @@ def get_clusters_for_articles():
         return jsonify({"error": "La liste 'article_ids' est requise"}), 400
 
     article_ids = data['article_ids']
+    logging.info(f"Requête reçue pour trouver les clusters de {len(article_ids)} articles.")
     
     try:
-      
+        logging.info(f"Récupération des chunks pour les articles : {article_ids}")
         response, _ = client.scroll(
             collection_name=COLLECTION_NAME,
             scroll_filter=models.Filter(
@@ -40,8 +49,10 @@ def get_clusters_for_articles():
             with_vectors=False
         )
         if not response:
+            logging.error("Aucun chunk trouvé dans la base de données.")
             return jsonify({"error": "No chunks found for this code"}), 404
-
+        
+        logging.info(f"{len(response)} chunks récupérés. Début de l'agrégation...")
         points_sorted = sorted(response, key=lambda p: p.payload.get('original_id'))
 
         clusters_by_article = {}
@@ -56,8 +67,9 @@ def get_clusters_for_articles():
             else:
                 most_common = Counter(cluster_list).most_common(1)[0]
                 dominant_clusters[article_id] = most_common[0]
-
+        logging.info("Calcul des clusters dominants terminé.")
         return jsonify(dominant_clusters), 200
     except Exception as e:
+        logging.error(f"Erreur lors du traitement des clusters : {e}")
         traceback.print_exc() 
         return jsonify({"error": str(e)}), 500
