@@ -24,6 +24,7 @@ services:
     volumes:
       - model_cache:/root/.cache
       - ./mlruns:/code/mlrun
+      - flask_logs:/var/log/flask_app
     networks:
       - backend_net
     depends_on:
@@ -36,3 +37,4 @@ networks:
 volumes:
   qdrant_storage:
   model_cache:
+  flask_logs:

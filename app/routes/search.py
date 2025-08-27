@@ -8,7 +8,7 @@ import logging
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s - %(levelname)s - %(message)s',
                     handlers=[
-                        logging.FileHandler("Endpoint_Search.log", mode='w'), # 'w' pour écraser le log à chaque lancement
+                        logging.FileHandler("/var/log/flask_app/Endpoint_Search.log", mode='w'), # 'w' pour écraser le log à chaque lancement
                         logging.StreamHandler()
                     ])
 
