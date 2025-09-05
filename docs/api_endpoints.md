@@ -70,6 +70,6 @@ Description : Trouve le cluster dominant pour chaque article de la liste fournie
 
 ## Table des matières
 
-- [Lancement du projet](docs/setup.md)
-- [Orchestration](docs/orchestration.md)
-- [Authentification](docs/auth.md)
+- [Lancement du projet](setup.md)
+- [Orchestration](orchestration.md)
+- [Authentification](auth.md)

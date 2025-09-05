@@ -21,6 +21,6 @@ curl -H "x-api-key: exemple_clé_API" http://localhost:5000/...
 
 ## Table des matières
 
-- [Lancement du projet](docs/setup.md)
-- [Orchestration](docs/orchestration.md)
-- [Endpoints de l’API](docs/api_endpoints.md)
+- [Lancement du projet](setup.md)
+- [Orchestration](orchestration.md)
+- [Endpoints de l’API](api_endpoints.md)

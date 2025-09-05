@@ -50,6 +50,6 @@ docker compose exec flask_model python app/run_clustering.py
 ## Table des matières
 
 
-- [Orchestration](docs/orchestration.md)
-- [Authentification](docs/auth.md)
-- [Endpoints de l’API](docs/api_endpoints.md)
+- [Orchestration](orchestration.md)
+- [Authentification](auth.md)
+- [Endpoints de l’API](api_endpoints.md)

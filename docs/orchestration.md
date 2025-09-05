@@ -24,7 +24,7 @@ Le projet intègre une approche de qualité continue qui s'appuie sur plusieurs 
 
 ## Table des matières
 
-- [Lancement du projet](docs/setup.md)
-- [Authentification](docs/auth.md)
-- [Endpoints de l’API](docs/api_endpoints.md)
+- [Lancement du projet](setup.md)
+- [Authentification](auth.md)
+- [Endpoints de l’API](api_endpoints.md)
 
